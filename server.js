@@ -16,15 +16,25 @@ app.use(express.static('public'))
 
 app.get('/store', function(req, res){
 	fs.readFile('items.json', function(error, data) {
+	if (error) {
+		res.status(500).end()
+	} else {
+		res.render('store.ejs', {
+		stripePublicKey: stripePublicKey,
+		items: JSON.parse(data)
+		})
+	}
+	})
+})
+
+app.post('/purchase', function(req, res){
+	fs.readFile('items.json', function(error, data) {
 		if (error) {
 			res.status(500).end()
 		} else {
-			res.render('store.ejs', {
-				stripePublicKey: stripePublicKey,
-				items: JSON.parse(data)
-			})
-		}
+			console.log('purchase')
+			}
 		})
 	})
 
-app.listen(3000)
+app.listen(process.env.PORT || 8080)
